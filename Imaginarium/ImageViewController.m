@@ -45,18 +45,18 @@
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
         NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request
-                                                        completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
-                                                            if (!error) {
-                                                                if ([request.URL isEqual:self.imageURL]) {
-                                                                    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:localFile]];
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{ //Execute this block in the main queue
-                                                                        self.image = image;
-                                                                    });
-                                                                    //Or
-                                                                    //[self performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
-                                                                }
-                                                            }
-                                                        }];
+            completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
+                if (!error) {
+                    if ([request.URL isEqual:self.imageURL]) {
+                        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:localFile]];
+                        dispatch_async(dispatch_get_main_queue(), ^{ //Execute this block in the main queue
+                            self.image = image;
+                        });
+                        //Or
+                        //[self performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
+                    }
+                }
+            }];
         [task resume];
     }
 }
