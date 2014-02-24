@@ -21,7 +21,8 @@
         
         NSString *urlString = [NSString stringWithFormat:@"http://images.apple.com/v/iphone-5s/gallery/a/images/download/%@.jpg", segue.identifier];
         NSURL *url = [[NSURL alloc] initWithString:urlString];
-        [ivc setImageURL:url];
+        ivc.imageURL = url;
+        ivc.title = segue.identifier;
     }
 }
 
