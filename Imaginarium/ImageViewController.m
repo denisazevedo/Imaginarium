@@ -32,7 +32,31 @@
 
 - (void)setImageURL:(NSURL *)imageURL {
     _imageURL = imageURL;
-    self.image = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageURL]];
+    //self.image = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageURL]]; //blocking
+    [self startDownloadingImage];
+}
+
+- (void)startDownloadingImage {
+    self.image = nil;
+    if (self.imageURL) {
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:self.imageURL];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+        NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request
+                                                        completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
+                                                            if (!error) {
+                                                                if ([request.URL isEqual:self.imageURL]) {
+                                                                    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:localFile]];
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{ //Execute this block in the main queue
+                                                                        self.image = image;
+                                                                    });
+                                                                    //Or
+                                                                    //[self performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
+                                                                }
+                                                            }
+                                                        }];
+        [task resume];
+    }
 }
 
 - (UIImageView *)imageView {
