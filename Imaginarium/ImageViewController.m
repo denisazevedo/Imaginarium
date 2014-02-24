@@ -8,7 +8,7 @@
 
 #import "ImageViewController.h"
 
-@interface ImageViewController ()
+@interface ImageViewController () <UIScrollViewDelegate>
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIImage *image;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -16,8 +16,17 @@
 
 @implementation ImageViewController
 
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.imageView;
+}
+
 - (void)setScrollView:(UIScrollView *)scrollView {
     _scrollView = scrollView;
+    //For zoom
+    _scrollView.minimumZoomScale = 0.2;
+    _scrollView.maximumZoomScale = 2.0;
+    _scrollView.delegate = self;
+    //Fit the scroll
     _scrollView.contentSize = self.image ? self.image.size : CGSizeZero;
 }
 
