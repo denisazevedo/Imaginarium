@@ -15,6 +15,9 @@
 
 @implementation ViewController
 
+// gets which photo to display from the segue's identifier
+// inspect segues in the storyboard to see which is which
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.destinationViewController isKindOfClass:[ImageViewController class]]) {
         ImageViewController *ivc = (ImageViewController *)segue.destinationViewController;
